@@ -1,12 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
 import { getDocMeta } from '@/content/docs'
-import CaseStudiesPage from '@/views/docs/CaseStudiesPage.vue'
+import AIEssencePage from '@/views/docs/AIEssencePage.vue'
 import DocsHomePage from '@/views/docs/DocsHomePage.vue'
 import DocsLayout from '@/views/docs/DocsLayout.vue'
-import GettingStartedPage from '@/views/docs/GettingStartedPage.vue'
-import PoliciesPage from '@/views/docs/PoliciesPage.vue'
-import PromptTemplatesPage from '@/views/docs/PromptTemplatesPage.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,28 +14,13 @@ const router = createRouter({
       children: [
         {
           path: '',
-          name: 'docs-home',
+          name: 'docs-introduction',
           component: DocsHomePage,
         },
         {
-          path: 'guides/getting-started',
-          name: 'guides-getting-started',
-          component: GettingStartedPage,
-        },
-        {
-          path: 'playbooks/prompt-templates',
-          name: 'playbooks-prompt-templates',
-          component: PromptTemplatesPage,
-        },
-        {
-          path: 'playbooks/case-studies',
-          name: 'playbooks-case-studies',
-          component: CaseStudiesPage,
-        },
-        {
-          path: 'reference/policies',
-          name: 'reference-policies',
-          component: PoliciesPage,
+          path: 'ai-essence',
+          name: 'ai-essence',
+          component: AIEssencePage,
         },
       ],
     },

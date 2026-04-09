@@ -9,7 +9,7 @@ const route = useRoute()
 
 <template>
   <aside class="hidden lg:block">
-    <div class="sticky top-20 pr-6">
+    <div class="docs-sidebar-shell sticky top-20 pr-8">
       <div
         v-for="group in docsNavGroups"
         :key="group.title"
@@ -18,6 +18,7 @@ const route = useRoute()
         <p class="mb-3 text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
           {{ group.title }}
         </p>
+
         <nav class="space-y-1">
           <RouterLink
             v-for="item in group.items"
@@ -25,9 +26,9 @@ const route = useRoute()
             :to="item.to"
             :class="
               cn(
-                'block rounded-md px-3 py-2 text-sm leading-6 transition-colors',
+                'docs-sidebar-link block rounded-lg px-3 py-2.5 text-sm leading-6 transition-all',
                 route.path === item.to
-                  ? 'bg-muted font-medium text-foreground'
+                  ? 'docs-sidebar-link-active font-semibold text-foreground'
                   : 'text-muted-foreground hover:text-foreground',
               )
             "

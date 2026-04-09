@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed } from 'vue'
-import { Search } from 'lucide-vue-next'
+import { computed, onMounted, ref, watch } from 'vue'
+import { MoonStar, Search, SunMedium } from 'lucide-vue-next'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
 import DocsPager from '@/components/docs/DocsPager.vue'
@@ -15,6 +15,27 @@ const route = useRoute()
 
 const docMeta = computed(() => getDocMeta(route.path))
 const neighbors = computed(() => getDocNeighbors(route.path))
+const theme = ref<'light' | 'dark'>('light')
+
+function applyTheme(nextTheme: 'light' | 'dark') {
+  document.documentElement.classList.toggle('dark', nextTheme === 'dark')
+  localStorage.setItem('aiguide-theme', nextTheme)
+}
+
+function toggleTheme() {
+  theme.value = theme.value === 'light' ? 'dark' : 'light'
+}
+
+onMounted(() => {
+  const storedTheme = localStorage.getItem('aiguide-theme')
+  const preferredDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+  theme.value = storedTheme === 'dark' || (!storedTheme && preferredDark) ? 'dark' : 'light'
+  applyTheme(theme.value)
+})
+
+watch(theme, (nextTheme) => {
+  applyTheme(nextTheme)
+})
 </script>
 
 <template>
@@ -22,7 +43,9 @@ const neighbors = computed(() => getDocNeighbors(route.path))
     <header class="sticky top-0 z-50 border-b border-border/80 bg-background/88 backdrop-blur">
       <div class="mx-auto flex h-16 max-w-[1440px] items-center gap-6 px-4 sm:px-6 xl:px-8">
         <RouterLink to="/" class="flex shrink-0 items-center gap-3">
-          <div class="flex size-8 items-center justify-center rounded-md bg-foreground text-xs font-semibold text-background">
+          <div
+            class="flex size-8 items-center justify-center rounded-md bg-foreground text-xs font-semibold text-background"
+          >
             AI
           </div>
           <span class="text-sm font-semibold">AI Guide</span>
@@ -40,35 +63,42 @@ const neighbors = computed(() => getDocNeighbors(route.path))
         </nav>
 
         <div class="ml-auto flex items-center gap-3">
-          <label
-            class="hidden w-[260px] items-center gap-2 rounded-full border border-border bg-background px-3 text-sm text-muted-foreground md:flex"
+          <div
+            class="hidden items-center gap-2 rounded-full border border-border bg-background/80 px-3 text-sm text-muted-foreground md:flex"
           >
             <Search class="size-4" />
-            <input
-              type="text"
-              placeholder="Search documentation..."
-              class="h-10 w-full bg-transparent outline-none placeholder:text-muted-foreground"
-            />
-          </label>
+            <span class="pr-2">内部 AI 使用说明</span>
+          </div>
+
+          <button
+            type="button"
+            :class="cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'size-9 rounded-full')"
+            @click="toggleTheme"
+          >
+            <SunMedium v-if="theme === 'dark'" class="size-4" />
+            <MoonStar v-else class="size-4" />
+          </button>
 
           <RouterLink
-            to="/guides/getting-started"
+            to="/ai-essence"
             :class="cn(buttonVariants({ size: 'sm' }))"
           >
-            开始阅读
+            阅读下一篇
           </RouterLink>
         </div>
       </div>
     </header>
 
-    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_180px] xl:px-8">
+    <div
+      class="mx-auto grid max-w-[1440px] grid-cols-1 gap-8 px-4 sm:px-6 lg:grid-cols-[220px_minmax(0,1fr)] xl:grid-cols-[220px_minmax(0,1fr)_180px] xl:px-8"
+    >
       <DocsSidebar />
 
       <main class="min-w-0">
         <div class="mx-auto w-full max-w-3xl py-10">
           <div class="mb-8 space-y-3 border-b border-border/70 pb-6">
             <span :class="cn(badgeVariants({ variant: 'outline' }), 'w-fit')">
-              {{ route.path === '/' ? 'Documentation' : 'Docs Page' }}
+              {{ route.path === '/' ? 'AI Guide' : 'Concept Notes' }}
             </span>
             <h1 class="text-4xl font-semibold tracking-tight text-balance">
               {{ docMeta?.title }}

@@ -22,51 +22,23 @@ export interface DocsMeta {
 }
 
 export const topNavItems = [
-  { title: '首页', to: '/' },
-  { title: '入门', to: '/guides/getting-started' },
-  { title: '模板', to: '/playbooks/prompt-templates' },
-  { title: '案例', to: '/playbooks/case-studies' },
-  { title: '规范', to: '/reference/policies' },
+  { title: '文档简介', to: '/' },
+  { title: 'AI 的本质', to: '/ai-essence' },
 ]
 
 export const docsNavGroups: DocsNavGroup[] = [
   {
-    title: '开始使用',
+    title: '文档目录',
     items: [
       {
-        title: '文档首页',
+        title: '文档简介',
         to: '/',
-        description: '查看站点定位、阅读顺序和内容地图。',
+        description: '说明为什么做这个网站、谁适合看，以及你能直接拿走什么。',
       },
       {
-        title: '快速上手',
-        to: '/guides/getting-started',
-        description: '给第一次使用这套知识站的同事看什么。',
-      },
-    ],
-  },
-  {
-    title: 'Playbooks',
-    items: [
-      {
-        title: 'Prompt 模板',
-        to: '/playbooks/prompt-templates',
-        description: '沉淀稳定好用的提示词结构和写法。',
-      },
-      {
-        title: '案例复盘',
-        to: '/playbooks/case-studies',
-        description: '记录一次完整协作过程与可复用经验。',
-      },
-    ],
-  },
-  {
-    title: 'Reference',
-    items: [
-      {
-        title: '使用规范',
-        to: '/reference/policies',
-        description: '明确哪些场景适合用 AI，哪些内容必须人工复核。',
+        title: 'AI 的本质',
+        to: '/ai-essence',
+        description: '解释 AI 为什么会一本正经地胡说，以及它真正的能力边界。',
       },
     ],
   },
@@ -74,54 +46,23 @@ export const docsNavGroups: DocsNavGroup[] = [
 
 export const docsMetaByPath: Record<string, DocsMeta> = {
   '/': {
-    title: 'AI Guide',
-    description: '部门内部 AI 使用心得与协作经验的统一入口。',
+    title: '文档简介',
+    description: '这是一份给同事快速上手的内部 AI 使用说明，少讲概念，多讲能直接省时间的用法。',
     toc: [
-      { id: 'overview', label: '站点定位' },
-      { id: 'reading-path', label: '推荐阅读路线' },
-      { id: 'content-map', label: '内容地图' },
-      { id: 'sample', label: '示例片段' },
-      { id: 'updates', label: '近期更新' },
+      { id: 'why', label: '为什么做这个网站' },
+      { id: 'audience', label: '谁适合看' },
+      { id: 'benefits', label: '你能得到什么' },
+      { id: 'how-to-use', label: '建议怎么读' },
     ],
   },
-  '/guides/getting-started': {
-    title: '快速上手',
-    description: '帮助同事在第一次使用时，快速理解站点结构和协作方式。',
+  '/ai-essence': {
+    title: 'AI 的本质',
+    description: 'AI 是高维概率预测机器，不是会真正理解现实世界的“脑子”。',
     toc: [
-      { id: 'role', label: '这个站解决什么问题' },
-      { id: 'workflow', label: '推荐协作流程' },
-      { id: 'checklist', label: '首次贡献清单' },
-      { id: 'publishing', label: '发布约定' },
-    ],
-  },
-  '/playbooks/prompt-templates': {
-    title: 'Prompt 模板',
-    description: '把零散的提问经验沉淀成团队可复用的模板。',
-    toc: [
-      { id: 'structure', label: '模板结构' },
-      { id: 'examples', label: '常用模板' },
-      { id: 'writing', label: '写作建议' },
-      { id: 'maintenance', label: '维护方式' },
-    ],
-  },
-  '/playbooks/case-studies': {
-    title: '案例复盘',
-    description: '记录一次 AI 协作的全过程，帮助团队知道怎样复用。',
-    toc: [
-      { id: 'template', label: '案例页模板' },
-      { id: 'angles', label: '拆解视角' },
-      { id: 'sample', label: '示例结构' },
-      { id: 'review', label: '复盘问题' },
-    ],
-  },
-  '/reference/policies': {
-    title: '使用规范',
-    description: '明确边界、责任和审核方式，让 AI 使用更稳。',
-    toc: [
-      { id: 'scenarios', label: '适用场景' },
-      { id: 'boundaries', label: '风险边界' },
-      { id: 'checklist', label: '审核清单' },
-      { id: 'faq', label: '常见问题' },
+      { id: 'prediction', label: 'AI 没有脑子' },
+      { id: 'hallucination', label: '事实性的幻觉边界' },
+      { id: 'physics', label: '物理常识边界' },
+      { id: 'context', label: '实时私有上下文盲区' },
     ],
   },
 }
