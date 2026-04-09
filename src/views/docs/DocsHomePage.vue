@@ -20,7 +20,7 @@ const takeaways = [
 const readingGuide = [
   '先看这一页，知道这个站是为谁写的、值不值得花时间看。',
   '再去看“AI 的本质”，先建立正确预期，避免把 AI 想得太神。',
-  '后面再继续往下补模板和场景页时，也都会围绕“怎么更快完成工作”来写。',
+  '继续看“AI 辅助开发流程”，把从需求对齐到验证沉淀的完整做法串起来。',
 ]
 </script>
 
@@ -105,6 +105,13 @@ const readingGuide = [
         :class="cn(buttonVariants({ size: 'sm' }))"
       >
         继续看 AI 的本质
+        <ArrowRight class="size-4" />
+      </RouterLink>
+      <RouterLink
+        to="/ai-dev-workflow"
+        :class="cn(buttonVariants({ variant: 'outline', size: 'sm' }))"
+      >
+        看 AI 辅助开发流程
         <ArrowRight class="size-4" />
       </RouterLink>
     </div>

@@ -15,6 +15,8 @@ const route = useRoute()
 
 const docMeta = computed(() => getDocMeta(route.path))
 const neighbors = computed(() => getDocNeighbors(route.path))
+const headerCta = computed(() => neighbors.value.next?.to ?? '/')
+const headerCtaLabel = computed(() => (neighbors.value.next ? '阅读下一篇' : '回到文档简介'))
 const theme = ref<'light' | 'dark'>('light')
 
 function applyTheme(nextTheme: 'light' | 'dark') {
@@ -63,12 +65,7 @@ watch(theme, (nextTheme) => {
         </nav>
 
         <div class="ml-auto flex items-center gap-3">
-          <div
-            class="hidden items-center gap-2 rounded-full border border-border bg-background/80 px-3 text-sm text-muted-foreground md:flex"
-          >
-            <Search class="size-4" />
-            <span class="pr-2">内部 AI 使用说明</span>
-          </div>
+          
 
           <button
             type="button"
@@ -80,10 +77,10 @@ watch(theme, (nextTheme) => {
           </button>
 
           <RouterLink
-            to="/ai-essence"
+            :to="headerCta"
             :class="cn(buttonVariants({ size: 'sm' }))"
           >
-            阅读下一篇
+            {{ headerCtaLabel }}
           </RouterLink>
         </div>
       </div>

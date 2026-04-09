@@ -24,6 +24,7 @@ export interface DocsMeta {
 export const topNavItems = [
   { title: '文档简介', to: '/' },
   { title: 'AI 的本质', to: '/ai-essence' },
+  { title: 'AI 辅助开发流程', to: '/ai-dev-workflow' },
 ]
 
 export const docsNavGroups: DocsNavGroup[] = [
@@ -39,6 +40,11 @@ export const docsNavGroups: DocsNavGroup[] = [
         title: 'AI 的本质',
         to: '/ai-essence',
         description: '解释 AI 为什么会一本正经地胡说，以及它真正的能力边界。',
+      },
+      {
+        title: 'AI 辅助开发流程',
+        to: '/ai-dev-workflow',
+        description: '把需求对齐、架构设计、分阶段开发和上下文沉淀串成一条可执行流程。',
       },
     ],
   },
@@ -63,6 +69,19 @@ export const docsMetaByPath: Record<string, DocsMeta> = {
       { id: 'hallucination', label: '事实性的幻觉边界' },
       { id: 'physics', label: '物理常识边界' },
       { id: 'context', label: '实时私有上下文盲区' },
+    ],
+  },
+  '/ai-dev-workflow': {
+    title: 'AI 辅助开发流程',
+    description: '把 AI 当成协作式开发搭档，而不是一次性代码生成器，按阶段推进会稳得多。',
+    toc: [
+      { id: 'overview', label: '流程总览' },
+      { id: 'stage-1', label: '阶段一：需求对齐' },
+      { id: 'stage-2', label: '阶段二：架构设计' },
+      { id: 'stage-3', label: '阶段三：工程初始化' },
+      { id: 'stage-4', label: '阶段四：阶段性开发' },
+      { id: 'stage-5', label: '阶段五：验证与沉淀' },
+      { id: 'tips', label: '落地建议' },
     ],
   },
 }

@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 
 import { getDocMeta } from '@/content/docs'
 import AIEssencePage from '@/views/docs/AIEssencePage.vue'
+import AIDevWorkflowPage from '@/views/docs/AIDevWorkflowPage.vue'
 import DocsHomePage from '@/views/docs/DocsHomePage.vue'
 import DocsLayout from '@/views/docs/DocsLayout.vue'
 
@@ -21,6 +22,11 @@ const router = createRouter({
           path: 'ai-essence',
           name: 'ai-essence',
           component: AIEssencePage,
+        },
+        {
+          path: 'ai-dev-workflow',
+          name: 'ai-dev-workflow',
+          component: AIDevWorkflowPage,
         },
       ],
     },
