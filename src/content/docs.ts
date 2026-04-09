@@ -24,6 +24,7 @@ export interface DocsMeta {
 export const topNavItems = [
   { title: '文档简介', to: '/' },
   { title: 'AI 的本质', to: '/ai-essence' },
+  { title: '核心名词解释', to: '/ai-terms' },
   { title: 'AI 辅助开发流程', to: '/ai-dev-workflow' },
 ]
 
@@ -40,6 +41,11 @@ export const docsNavGroups: DocsNavGroup[] = [
         title: 'AI 的本质',
         to: '/ai-essence',
         description: '解释 AI 为什么会一本正经地胡说，以及它真正的能力边界。',
+      },
+      {
+        title: '核心名词解释',
+        to: '/ai-terms',
+        description: '把 Prompt、MCP、Skill、Agent、LLM 这些常见词串起来讲清楚。',
       },
       {
         title: 'AI 辅助开发流程',
@@ -69,6 +75,20 @@ export const docsMetaByPath: Record<string, DocsMeta> = {
       { id: 'hallucination', label: '事实性的幻觉边界' },
       { id: 'physics', label: '物理常识边界' },
       { id: 'context', label: '实时私有上下文盲区' },
+    ],
+  },
+  '/ai-terms': {
+    title: 'AI 名词解释',
+    description: '把 LLM、Prompt、Agent、Skill、MCP 这些高频词放到同一条工作链路里理解，会比单独背定义更容易。',
+    toc: [
+      { id: 'overview', label: '先给一个整体图' },
+      { id: 'llm', label: 'LLM 是什么' },
+      { id: 'prompt', label: 'Prompt 是什么' },
+      { id: 'agent', label: 'Agent 是什么' },
+      { id: 'skill', label: 'Skill 是什么' },
+      { id: 'mcp', label: 'MCP 是什么' },
+      { id: 'chain', label: '这些概念怎么串起来' },
+      { id: 'summary', label: '最后怎么记' },
     ],
   },
   '/ai-dev-workflow': {

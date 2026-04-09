@@ -65,8 +65,6 @@ watch(theme, (nextTheme) => {
         </nav>
 
         <div class="ml-auto flex items-center gap-3">
-          
-
           <button
             type="button"
             :class="cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'size-9 rounded-full')"

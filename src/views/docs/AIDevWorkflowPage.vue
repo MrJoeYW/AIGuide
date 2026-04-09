@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { Blocks, Check, CheckCheck, Copy, FileStack, FolderTree, MessagesSquare, Wrench } from 'lucide-vue-next'
 
-import { Button } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 const stages = [
   {
@@ -102,18 +103,62 @@ const tips = [
 ]
 
 const copiedStageId = ref<string | null>(null)
+const copyErrorStageId = ref<string | null>(null)
 let copiedResetTimer: number | null = null
 
+function resetCopyState() {
+  copiedStageId.value = null
+  copyErrorStageId.value = null
+}
+
+function fallbackCopy(text: string) {
+  const textarea = document.createElement('textarea')
+  textarea.value = text
+  textarea.setAttribute('readonly', 'true')
+  textarea.style.position = 'fixed'
+  textarea.style.opacity = '0'
+  textarea.style.pointerEvents = 'none'
+  document.body.appendChild(textarea)
+  textarea.focus()
+  textarea.select()
+
+  const successful = document.execCommand('copy')
+  document.body.removeChild(textarea)
+  return successful
+}
+
 async function copyPrompt(stageId: string, prompt: string) {
-  await navigator.clipboard.writeText(prompt)
-  copiedStageId.value = stageId
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(prompt)
+    } else {
+      const successful = fallbackCopy(prompt)
+
+      if (!successful) {
+        throw new Error('Fallback copy failed')
+      }
+    }
+
+    copiedStageId.value = stageId
+    copyErrorStageId.value = null
+  } catch {
+    const successful = fallbackCopy(prompt)
+
+    if (!successful) {
+      copiedStageId.value = null
+      copyErrorStageId.value = stageId
+    } else {
+      copiedStageId.value = stageId
+      copyErrorStageId.value = null
+    }
+  }
 
   if (copiedResetTimer) {
     window.clearTimeout(copiedResetTimer)
   }
 
   copiedResetTimer = window.setTimeout(() => {
-    copiedStageId.value = null
+    resetCopyState()
   }, 1800)
 }
 </script>
@@ -171,10 +216,13 @@ async function copyPrompt(stageId: string, prompt: string) {
             <Blocks class="size-4" />
             可复制提示词
           </div>
-          <Button
-            size="sm"
-            variant="outline"
+          <button
             type="button"
+            :class="
+              cn(
+                buttonVariants({ size: 'sm', variant: copyErrorStageId === item.id ? 'secondary' : 'outline' }),
+              )
+            "
             @click="copyPrompt(item.id, item.prompt)"
           >
             <Check
@@ -182,11 +230,21 @@ async function copyPrompt(stageId: string, prompt: string) {
               class="size-4"
             />
             <Copy
+              v-else-if="copyErrorStageId === item.id"
+              class="size-4"
+            />
+            <Copy
               v-else
               class="size-4"
             />
-            {{ copiedStageId === item.id ? '已复制' : '复制提示词' }}
-          </Button>
+            {{
+              copiedStageId === item.id
+                ? '已复制'
+                : copyErrorStageId === item.id
+                  ? '复制失败'
+                  : '复制提示词'
+            }}
+          </button>
         </div>
         <pre class="doc-code doc-code-wrap mt-4"><code>{{ item.prompt }}</code></pre>
       </div>
