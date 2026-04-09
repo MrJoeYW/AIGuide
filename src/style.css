@@ -1,0 +1,151 @@
+@import "tailwindcss";
+
+@theme inline {
+  --font-sans: "IBM Plex Sans", "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    sans-serif;
+  --font-serif: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 6px);
+}
+
+:root {
+  --background: #fcfcfb;
+  --foreground: #111827;
+  --card: rgba(255, 255, 255, 0.9);
+  --card-foreground: #111827;
+  --popover: #ffffff;
+  --popover-foreground: #111827;
+  --primary: #111827;
+  --primary-foreground: #f9fafb;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f6f7f8;
+  --muted-foreground: #667085;
+  --accent: #eef2ff;
+  --accent-foreground: #1f2937;
+  --border: rgba(17, 24, 39, 0.1);
+  --ring: rgba(17, 24, 39, 0.16);
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(circle at top, rgba(17, 24, 39, 0.05), transparent 28%),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(252, 252, 251, 1));
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: rgba(17, 24, 39, 0.12);
+  }
+
+  #app {
+    min-height: 100vh;
+  }
+}
+
+.doc-page {
+  @apply text-[15px] leading-7;
+}
+
+.doc-kicker {
+  @apply text-sm font-medium text-primary;
+}
+
+.doc-section {
+  @apply border-b border-border/70 py-10 first:border-t-0 last:border-b-0 last:pb-0;
+}
+
+.doc-section h2 {
+  @apply mt-2 text-2xl font-semibold tracking-tight;
+}
+
+.doc-section p {
+  @apply mt-4 text-muted-foreground;
+}
+
+.doc-actions {
+  @apply mt-6 flex flex-wrap gap-3;
+}
+
+.doc-note {
+  @apply rounded-2xl border border-border/70 bg-muted/35 px-4 py-3 text-sm;
+}
+
+.doc-list {
+  @apply mt-4 space-y-3 text-muted-foreground;
+}
+
+.doc-list li {
+  @apply ml-5 list-disc pl-1;
+}
+
+.doc-ordered-list {
+  @apply mt-4 space-y-3 text-muted-foreground;
+}
+
+.doc-ordered-list li {
+  @apply ml-5 list-decimal pl-1;
+}
+
+.doc-code {
+  @apply mt-5 overflow-x-auto rounded-2xl border border-border/70 bg-[#0f172a] p-5 text-sm leading-7 text-slate-50;
+}
+
+.doc-link-list {
+  @apply mt-5 rounded-2xl border border-border/70;
+}
+
+.doc-link-group {
+  @apply border-b border-border/70 bg-muted/35 px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-muted-foreground last:border-b-0;
+}
+
+.doc-link-row {
+  @apply flex items-center justify-between gap-4 border-b border-border/70 px-4 py-4 transition-colors last:border-b-0 hover:bg-muted/35;
+}
+
+.doc-timeline {
+  @apply mt-5 rounded-2xl border border-border/70;
+}
+
+.doc-timeline-row {
+  @apply grid gap-2 border-b border-border/70 px-4 py-4 last:border-b-0 md:grid-cols-[120px_minmax(0,1fr)];
+}
+
+.doc-timeline-date {
+  @apply text-sm font-medium text-muted-foreground;
+}
