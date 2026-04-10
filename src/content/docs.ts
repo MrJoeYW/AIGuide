@@ -65,6 +65,7 @@ export const docsMetaByPath: Record<string, DocsMeta> = {
       { id: 'audience', label: '谁适合看' },
       { id: 'benefits', label: '你能得到什么' },
       { id: 'how-to-use', label: '建议怎么读' },
+      { id: 'contributors', label: '共建与贡献者' },
     ],
   },
   '/ai-essence': {

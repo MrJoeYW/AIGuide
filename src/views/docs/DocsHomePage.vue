@@ -1,8 +1,15 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { ArrowRight, Bot, FileText, Sparkles } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { buttonVariants } from '@/components/ui/button'
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from '@/components/ui/hover-card'
 import { cn } from '@/lib/utils'
 
 const readers = [
@@ -22,6 +29,25 @@ const readingGuide = [
   '再去看“AI 的本质”，先建立正确预期，避免把 AI 想得太神。',
   '继续看“AI 辅助开发流程”，把从需求对齐到验证沉淀的完整做法串起来。',
 ]
+
+const contributors = [
+  {
+    name: '乔禹威',
+    id: 'UW-27897',
+    avatar: '/avatars/qiaoyuwei.png',
+    fallback: '乔',
+  },
+  {
+    name: '毛志成',
+    id: 'UW-22503',
+    avatar: '/avatars/maozhicheng.png',
+    fallback: '毛',
+  },
+]
+
+const sortedContributors = computed(() =>
+  [...contributors].sort((a, b) => a.name.localeCompare(b.name, 'zh-Hans-CN')),
+)
 </script>
 
 <template>
@@ -114,6 +140,47 @@ const readingGuide = [
         看 AI 辅助开发流程
         <ArrowRight class="size-4" />
       </RouterLink>
+    </div>
+  </section>
+
+  <section id="contributors" class="doc-section">
+    <p class="doc-kicker">Co-build</p>
+    <h2>欢迎大家一起来完善这份文档</h2>
+    <p>
+      这份说明书不是一次写完的，它更适合在真实使用中不断补充、纠错和沉淀。欢迎大家把自己试出来的好用方法、踩过的坑和更贴近业务的案例继续加进来，让它越来越像一份真正有用的团队手册。
+    </p>
+
+    <div class="doc-note mt-5">
+      <p class="mt-0 font-medium text-foreground">感谢以下贡献</p>
+      <p>以下排名不分先后，根据姓名自动排序</p>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-4">
+      <HoverCard
+        v-for="person in sortedContributors"
+        :key="person.id"
+        :open-delay="120"
+        :close-delay="80"
+      >
+        <HoverCardTrigger as-child>
+          <button
+            type="button"
+            class="rounded-full outline-none ring-offset-background transition-transform hover:-translate-y-0.5 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+          >
+            <Avatar class="size-14 shadow-sm">
+              <AvatarImage :src="person.avatar" :alt="person.name">
+                <template #fallback>
+                  <AvatarFallback>{{ person.fallback }}</AvatarFallback>
+                </template>
+              </AvatarImage>
+            </Avatar>
+          </button>
+        </HoverCardTrigger>
+        <HoverCardContent class="w-48">
+          <p class="font-medium text-foreground">{{ person.name }}</p>
+          <p class="mt-1 text-sm text-muted-foreground">{{ person.id }}</p>
+        </HoverCardContent>
+      </HoverCard>
     </div>
   </section>
 </template>

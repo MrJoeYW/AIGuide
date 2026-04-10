@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed, onMounted, ref, watch } from 'vue'
-import { MoonStar, Search, SunMedium } from 'lucide-vue-next'
+import { MoonStar, SunMedium } from 'lucide-vue-next'
 import { RouterLink, RouterView, useRoute } from 'vue-router'
 
+import GitHubMarkIcon from '@/components/icons/GitHubMarkIcon.vue'
 import DocsPager from '@/components/docs/DocsPager.vue'
 import DocsSidebar from '@/components/docs/DocsSidebar.vue'
 import DocsToc from '@/components/docs/DocsToc.vue'
@@ -12,6 +13,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 const route = useRoute()
+const githubUrl = 'https://github.com/MrJoeYW/AIGuide'
 
 const docMeta = computed(() => getDocMeta(route.path))
 const neighbors = computed(() => getDocNeighbors(route.path))
@@ -65,6 +67,22 @@ watch(theme, (nextTheme) => {
         </nav>
 
         <div class="ml-auto flex items-center gap-3">
+          <a
+            :href="githubUrl"
+            target="_blank"
+            rel="noreferrer"
+            :class="
+              cn(
+                buttonVariants({ size: 'icon' }),
+                'size-9 rounded-full bg-foreground text-background shadow-sm hover:bg-foreground/90',
+              )
+            "
+            aria-label="查看 GitHub 仓库"
+            title="查看 GitHub 仓库"
+          >
+            <GitHubMarkIcon class="size-4.5" />
+          </a>
+
           <button
             type="button"
             :class="cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'size-9 rounded-full')"
