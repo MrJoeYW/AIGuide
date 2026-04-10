@@ -88,7 +88,7 @@ export const docsMetaByPath: Record<string, DocsMeta> = {
       { id: 'agent', label: 'Agent 是什么' },
       { id: 'skill', label: 'Skill 是什么' },
       { id: 'mcp', label: 'MCP 是什么' },
-      { id: 'chain', label: '这些概念怎么串起来' },
+      { id: 'chain', label: '概念串联' },
       { id: 'summary', label: '最后怎么记' },
     ],
   },
@@ -110,11 +110,16 @@ export const docsMetaByPath: Record<string, DocsMeta> = {
 const docsIndex = docsNavGroups.flatMap((group) => group.items)
 
 export function getDocMeta(path: string) {
+  if (path.startsWith('/ai-terms/')) {
+    return docsMetaByPath['/ai-terms']
+  }
+
   return docsMetaByPath[path]
 }
 
 export function getDocNeighbors(path: string) {
-  const index = docsIndex.findIndex((item) => item.to === path)
+  const normalizedPath = path.startsWith('/ai-terms/') ? '/ai-terms' : path
+  const index = docsIndex.findIndex((item) => item.to === normalizedPath)
 
   if (index === -1) {
     return { prev: null, next: null }

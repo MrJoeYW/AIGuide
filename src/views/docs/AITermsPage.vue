@@ -1,38 +1,109 @@
 <script setup lang="ts">
-import { Bot, Braces, Cable, MessageSquareText, Puzzle, Workflow } from 'lucide-vue-next'
+import { computed, onBeforeUnmount, onMounted, ref, type ComponentPublicInstance } from 'vue'
+import { X } from 'lucide-vue-next'
+import { gsap } from 'gsap'
+import { DrawerContent, DrawerDescription, DrawerOverlay, DrawerPortal, DrawerRoot, DrawerTitle } from 'vaul-vue'
+import { useRoute, useRouter } from 'vue-router'
 
-const conceptCards = [
-  {
-    id: 'llm',
-    title: 'LLM：大型语言模型',
-    short: '最底层的“会生成文本的模型”。',
-    icon: Bot,
-  },
-  {
-    id: 'prompt',
-    title: 'Prompt',
-    short: '你给 AI 的任务描述和上下文。',
-    icon: MessageSquareText,
-  },
-  {
-    id: 'agent',
-    title: 'Agent',
-    short: '能自己分步行动、调用工具的 AI 执行体。',
-    icon: Workflow,
-  },
-  {
-    id: 'skill',
-    title: 'Skill',
-    short: '给 Agent 的专门能力包或流程说明。',
-    icon: Puzzle,
-  },
-  {
-    id: 'mcp',
-    title: 'MCP',
-    short: '让 AI 连接外部数据和工具的标准方式。',
-    icon: Cable,
-  },
-]
+import { aiTerms, type AITermId } from '@/content/ai-terms'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import AgentTermPage from '@/views/docs/terms/AgentTermPage.vue'
+import LlmTermPage from '@/views/docs/terms/LlmTermPage.vue'
+import McpTermPage from '@/views/docs/terms/McpTermPage.vue'
+import PromptTermPage from '@/views/docs/terms/PromptTermPage.vue'
+import SkillTermPage from '@/views/docs/terms/SkillTermPage.vue'
+
+const route = useRoute()
+const router = useRouter()
+
+const drawerDirection = ref<'bottom' | 'right'>('bottom')
+const cardRefs = ref<HTMLElement[]>([])
+
+const termPageMap = {
+  llm: LlmTermPage,
+  prompt: PromptTermPage,
+  agent: AgentTermPage,
+  skill: SkillTermPage,
+  mcp: McpTermPage,
+} satisfies Record<AITermId, unknown>
+
+const selectedTermId = computed(() => {
+  const termId = route.params.termId
+  return typeof termId === 'string' ? (termId as AITermId) : null
+})
+
+const selectedTerm = computed(() =>
+  aiTerms.find((item) => item.id === selectedTermId.value) ?? null,
+)
+
+const selectedTermComponent = computed(() =>
+  selectedTermId.value ? termPageMap[selectedTermId.value] : null,
+)
+
+function updateDrawerDirection() {
+  drawerDirection.value = window.innerWidth >= 1024 ? 'right' : 'bottom'
+}
+
+function setCardRef(el: Element | ComponentPublicInstance | null, index: number) {
+  const candidate =
+    el instanceof HTMLElement
+      ? el
+      : el && '$el' in el && el.$el instanceof HTMLElement
+        ? el.$el
+        : null
+
+  if (candidate) {
+    cardRefs.value[index] = candidate
+  }
+}
+
+function animateCardEnter(index: number) {
+  const card = cardRefs.value[index]
+  if (!card) {
+    return
+  }
+
+  gsap.to(card, {
+    y: -8,
+    duration: 0.26,
+    ease: 'power2.out',
+    boxShadow: '0 18px 36px rgba(15, 23, 42, 0.1), inset 0 0 0 1px rgba(15, 23, 42, 0.04)',
+  })
+}
+
+function animateCardLeave(index: number) {
+  const card = cardRefs.value[index]
+  if (!card) {
+    return
+  }
+
+  gsap.to(card, {
+    y: 0,
+    duration: 0.28,
+    ease: 'power2.out',
+    boxShadow: '0 14px 35px rgba(15, 23, 42, 0.06), inset 0 0 0 1px rgba(15, 23, 42, 0.04)',
+  })
+}
+
+function openTerm(termId: AITermId) {
+  router.push(`/ai-terms/${termId}`)
+}
+
+function handleDrawerOpenChange(open: boolean) {
+  if (!open && selectedTermId.value) {
+    router.push('/ai-terms')
+  }
+}
+
+onMounted(() => {
+  updateDrawerDirection()
+  window.addEventListener('resize', updateDrawerDirection)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateDrawerDirection)
+})
 </script>
 
 <template>
@@ -46,15 +117,20 @@ const conceptCards = [
     </p>
 
     <div class="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-5">
-      <div
-        v-for="item in conceptCards"
+      <button
+        v-for="(item, index) in aiTerms"
         :key="item.id"
-        class="rounded-2xl border border-border/70 bg-card/50 p-4"
+        :ref="(el) => setCardRef(el, index)"
+        type="button"
+        class="term-card group text-left"
+        @mouseenter="animateCardEnter(index)"
+        @mouseleave="animateCardLeave(index)"
+        @click="openTerm(item.id)"
       >
         <component :is="item.icon" class="size-5 text-primary" />
         <p class="mt-4 font-medium text-foreground">{{ item.title }}</p>
-        <p class="mt-2 text-sm leading-6 text-muted-foreground">{{ item.short }}</p>
-      </div>
+        <p class="mt-2 text-sm leading-6 text-muted-foreground">{{ item.summary }}</p>
+      </button>
     </div>
   </section>
 
@@ -142,7 +218,7 @@ const conceptCards = [
   </section>
 
   <section id="chain" class="doc-section">
-    <p class="doc-kicker">How They Connect</p>
+    <p class="doc-kicker">How It Connects</p>
     <h2>这些概念怎么串起来</h2>
     <p>
       最容易记住的一种顺序是：
@@ -186,7 +262,75 @@ const conceptCards = [
       <li><strong class="text-foreground">MCP</strong>：连接标准，负责“让 AI 能接触外部数据和工具”。</li>
     </ul>
     <p class="doc-note">
-      如果只记一句话：<strong class="text-foreground">Prompt 是你怎么说，LLM 是它怎么想，Agent 是它怎么做，Skill 是它会哪些专长，MCP 是它怎么连外部世界。</strong>
+      最简单的记忆方式是：<strong class="text-foreground">Prompt 是你怎么说，LLM 是它怎么生成，Agent 是它怎么做事，Skill 是它会哪些专长，MCP 是它怎么连到外面的数据和工具。</strong>
     </p>
   </section>
+
+  <DrawerRoot
+    :open="Boolean(selectedTerm)"
+    :direction="drawerDirection"
+    :modal="true"
+    :should-scale-background="false"
+    @update:open="handleDrawerOpenChange"
+  >
+    <DrawerPortal>
+      <DrawerOverlay class="fixed inset-0 z-40 bg-slate-950/38 backdrop-blur-md" />
+      <DrawerContent
+        :class="
+          cn(
+            'fixed z-50 border-border/80 bg-background/96 shadow-2xl shadow-black/15 outline-none backdrop-blur-xl',
+            drawerDirection === 'right'
+              ? 'inset-y-0 right-0 h-full w-full max-w-[780px] border-l'
+              : 'inset-x-0 bottom-0 h-[90vh] rounded-t-[28px] border-t',
+          )
+        "
+      >
+        <div
+          :class="
+            cn(
+              'mx-auto flex w-full max-w-4xl flex-col',
+              drawerDirection === 'right' ? 'h-full' : 'h-[90vh]',
+            )
+          "
+        >
+          <div
+            :class="
+              cn(
+                'flex items-center justify-between gap-4 border-b border-border/70 px-6 py-5 sm:px-8',
+                drawerDirection === 'bottom' ? 'pt-3' : '',
+              )
+            "
+          >
+            <div class="space-y-1">
+              <div
+                v-if="drawerDirection === 'bottom'"
+                class="mx-auto mb-3 h-1.5 w-12 rounded-full bg-border"
+              />
+              <DrawerTitle class="text-2xl font-semibold tracking-tight text-foreground">
+                {{ selectedTerm?.title }}
+              </DrawerTitle>
+              <DrawerDescription class="text-sm leading-6 text-muted-foreground">
+                {{ selectedTerm?.subtitle }} · 点击遮罩或关闭按钮可返回卡片视图
+              </DrawerDescription>
+            </div>
+
+            <button
+              type="button"
+              :class="cn(buttonVariants({ variant: 'outline', size: 'icon' }), 'size-10 rounded-full')"
+              @click="handleDrawerOpenChange(false)"
+            >
+              <X class="size-4" />
+            </button>
+          </div>
+
+          <div class="min-h-0 flex-1 overflow-y-auto px-6 py-6 sm:px-8 sm:py-8">
+            <component
+              :is="selectedTermComponent"
+              v-if="selectedTermComponent"
+            />
+          </div>
+        </div>
+      </DrawerContent>
+    </DrawerPortal>
+  </DrawerRoot>
 </template>

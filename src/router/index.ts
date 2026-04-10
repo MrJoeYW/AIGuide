@@ -38,6 +38,11 @@ const router = createRouter({
           name: 'ai-terms',
           component: AITermsPage,
         },
+        {
+          path: 'ai-terms/:termId(llm|prompt|agent|skill|mcp)',
+          name: 'ai-term-detail',
+          component: AITermsPage,
+        },
       ],
     },
   ],
